@@ -1,0 +1,5 @@
+*.log
+*.jou
+kernel/cvtcolor_hls
+kernel/resize_hls
+kernel/sobel_hls

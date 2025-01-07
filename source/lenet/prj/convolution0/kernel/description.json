@@ -1,0 +1,5 @@
+{
+  "name": "convolution0",
+  "description": "This example illustrates how to use array partition to improve the memory access.",
+  "hls": {"config": "hls_config.cfg"}
+}
