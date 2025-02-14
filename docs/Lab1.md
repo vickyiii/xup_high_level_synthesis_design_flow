@@ -62,7 +62,7 @@ After completing this lab, you will be able to:
     <i>Using Search to selcet the chip</i>
     </p>
 
-12. In the *Settings* page, tpye 10ns in the clock.Click **next**. 
+12. In the *Settings* page, type 10ns in the clock.Click **next**. 
 13. Click **Finish**.
     You will see the created project in the *VITIS COMPOMENTS* view. Expand various sub-folders to see the entries under each sub-folder.
     <p align="center">
@@ -152,7 +152,7 @@ After completing this lab, you will be able to:
     <p align = "center">
     <i>The botton</i>
     </p>
-2. Select **Flow > C SYNTHSIS > Run** to start the synthesis process.
+2. Select **Flow > C SYNTHESIS > Run** to start the synthesis process.
 3. When the synthesis process is completed, Select **C SYNTHESIS > REPORTS > Synthesis** to oepn the synthesis page.
     <p align="center">
     <img src ="./images/lab1/Figure13.jpg">
