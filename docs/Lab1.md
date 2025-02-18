@@ -152,7 +152,7 @@ After completing this lab, you will be able to:
     <p align = "center">
     <i>The botton</i>
     </p>
-2. Select **Flow > C SYNTHESIS > Run** to start the synthesis process.
+2. Select **FLOW > C SYNTHESIS > Run** to start the synthesis process.
 3. When the synthesis process is completed, Select **C SYNTHESIS > REPORTS > Synthesis** to oepn the synthesis page.
     <p align="center">
     <img src ="./images/lab1/Figure13.jpg">
@@ -230,7 +230,7 @@ After completing this lab, you will be able to:
 ### Run C/RTL Co-simulation
 
 #### Run the C/RTL Co-simulation with the default settings of VHDL. Verify that the simulation passes.
-1. Select **Flow > C/RTL COSIMULATION > Run**, it will automatically run. Wait for tge COSIMULATION to complete.
+1. Select **FLOW > C/RTL COSIMULATION > Run**, it will automatically run. Wait for tge COSIMULATION to complete.
     The C/RTL Co-simulation will run, generating and compiling several files, and then simulating the design. It goes through three stages.
     First, the VHDL test bench is executed to generate input stimuli for the RTL design.  
     Second, an RTL test bench with newly generated input stimuli is created and the RTL simulation is then performed.  
@@ -282,7 +282,7 @@ And set the cosim.wave_debug.Then change the cosim.trace+level from None to all.
 ### Export RTL and Implement
 
 #### In Vitis HLS, export the design, selecting VHDL as a language, and run the implementation by selecting Evaluate option.
-1. In Vitis HLS, select **Flow > IMPLEMENTATION >** wait for implemntation finished.
+1. In Vitis HLS, select **FLOW > IMPLEMENTATION >** wait for implemntation finished.
     An Export RTL Dialog box will open.
     <p align="center">
     <img src ="./images/lab1/Figure24.jpg">
@@ -290,7 +290,7 @@ And set the cosim.wave_debug.Then change the cosim.trace+level from None to all.
     <p align = "center">
     <i>Run Implemntation Done</i>
     </p>
-2. Click the **Flow > IMPLEMENTATION > REPORTS > RTL Synthesis** to see the report.
+2. Click the **FLOW > IMPLEMENTATION > REPORTS > RTL Synthesis** to see the report.
     <p align="center">
     <img src ="./images/lab1/Figure25.jpg">
     </p>
