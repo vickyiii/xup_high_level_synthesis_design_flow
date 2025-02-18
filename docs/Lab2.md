@@ -17,13 +17,13 @@ After completing this lab, you will be able to:
 ### Create a Vitis HLS Project from Command Line
 
 #### Validate your design using terminal. Create a new Vitis HLS project from the terminal.
-1. Invoke Vitis HLS Command prompt by selecting **Start > Xilinx Design Tools > Vitis HLS 2022.2 Command Prompt** on Windows machine or open a new terminal window on Linux machine.
+1. Invoke Vitis HLS Command prompt by selecting **Start > Xilinx Design Tools > Vitis HLS 2024.2 Command Prompt** on Windows machine open the **Vivado 2024.2 Tcl Shell** (the version may vary).
 2. Change directory to **{labs}/lab2**.
 
    A self-checking program (yuv_filter_test.c) is provided. Using that we can validate the design. A Makefile is also provided. Using the Makefile, the necessary source files can be compiled and the compiled program can be executed. You can examine the contents of these files and the project directory.
 3. In the terminal, type **make** to compile and execute the program. (You might need to set up the system environment variable for make command)
     <p align="center">
-    <img src ="./images/lab2/Figure1.png">
+    <img src ="./images/lab2/Figure1.jpg">
     </p>
     <p align = "center">
     <i>Validating the design</i>
@@ -40,25 +40,25 @@ After completing this lab, you will be able to:
 * Synthesizing (Generating) the design which involves scheduling and binding of each functions and sub-function.
 * Generating RTL of each function and sub-function in Verilog and VHDL languages.
     <p align="center">
-    <img src ="./images/lab2/Figure2.png">
+    <img src ="./images/lab2/Figure2.jpg">
     </p>
     <p align = "center">
     <i>Creating project and setting up parameters</i>
     </p>
     <p align="center">
-    <img src ="./images/lab2/Figure3.png">
+    <img src ="./images/lab2/Figure3.jpg">
     </p>
     <p align = "center">
     <i>Synthesizing (Generating) the design</i>
     </p>
     <p align="center">
-    <img src ="./images/lab2/Figure4.png">
+    <img src ="./images/lab2/Figure4.jpg">
     </p>
     <p align = "center">
     <i>Generating RTL</i>
     </p>
-6. Open the created project (in GUI mode) from the terminal, by typing **vitis_hls -p yuv_filter.prj**.
-    The Vitis HLS will open in GUI mode and the project will be opened.
+1. Open the **Vitis 2024.2** , select **File > Set Workspace** and set the workspace to the **{labs}/lab2** directory.
+2. Click **Update** in the pop-up window to update the workspace.
 
 ### Analyze the Created Project and Results
 
