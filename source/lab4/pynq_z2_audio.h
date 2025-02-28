@@ -32,7 +32,17 @@
 #include "xparameters.h"
 
 //Base addresses
-#define AUDIO_BASE				XPAR_ZED_AUDIO_CTRL_0_BASEADDR
+#define AUDIO_BASE XPAR_AUDIO_CODEC_CTRL_0_BASEADDR
+
+#define XPAR_FIR_LEFT_DEVICE_ID  0  // FIR_0
+#define XPAR_FIR_RIGHT_DEVICE_ID 1  // FIR_1
+#define XPAR_FABRIC_FIR_LEFT_INTERRUPT_INTR XPAR_FABRIC_FIR_0_INTR  // intr of fir0
+#define XPAR_FABRIC_FIR_RIGHT_INTERRUPT_INTR XPAR_FABRIC_FIR_1_INTR  // intr of fir1
+
+#define XPAR_XIICPS_0_DEVICE_ID 0  // IIC device id
+
+#define XPAR_SCUGIC_0_DEVICE_ID 0  // SCUGIC id
+
 
 //Slave address for the ADAU audio controller
 #define IIC_SLAVE_ADDR			0x76

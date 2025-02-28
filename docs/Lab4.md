@@ -275,55 +275,50 @@ Download the audio ctrl IP from https://github.com/Xilinx/PYNQ/tree/master/board
 2. Click **Next**
 3. Make sure that *Include Bitstream* option is selected and click **Next**, leaving the target directory set to local project directory {labs}/lab4/audio.
 4. Open **Vitis 2024.2**
-5. Change the workspace to **{labs}/lab4/audio** and click **Next**
-6. Click **Finish**.
-7. In Vitis, select **File > New > Platform Project**
-8. Enter **audio** as the *Platform project name* and click **Next**
-9. For *XSA File*, browse to **{labs}/lab4/audio** and select **system_wrapper.xsa**
+5. Click the **Create Platform Component** ,set the path to **{labs}/lab4/platform** and change the name to **audio**. Click **Next**.
+6. Waiting for the xsa file parsing to complete, click **Next**.
+7. Click the **Build** button to build the platform.
    <p align="center">
-    <img src ="./images/lab4/Figure15.png">
+    <img src ="./images/lab4/Figure15.jpg">
     </p>
     <p align = "center">
-    <i>Hardware Specification</i>
+    <i>Platform after build</i>
     </p>
-10. Click **Finish** with the default settings (with **standalone operating system**).
-11. Select **File > New > Application Project**
-12. Click **Next**
-13. In **Select a platform from repository** tab, select **audio** as the platform.
-14. Click **Next**
-15. Enter **Test** as the *Project* Name and click **Next**
-16. Click **Next**, select **standalone_domain** for the domain.
+8.  Select **File > New Component > Application**
+9.  Let the path be **{labs}/lab4/app** and the name be **audio**. Click **Next**.
+10. Add the **audio** path if the path is not in the list (in the **{labs}/lab4/platform/audio/export/audio** folder). Select the audio platform and click **Next**.
     <p align="center">
-    <img src ="./images/lab4/Figure16.png">
+    <img src ="./images/lab4/Figure16.jpg">
+    </p>
+    <p align = "center">
+    <i>Select the audio platform</i>
+    </p>
+11. In the **Domain** section, select **standalone** and click **Next**.
+    <p align="center">
+    <img src ="./images/lab4/Figure17.jpg">
     </p>
     <p align = "center">
     <i>Select domain</i>
     </p>
-17. Click **Next**, select **Empty Application(C)** and click **Finish**
-18. Select *Test* in the project view, right-click the *src* folder, and select **Import Sources...**
-19. Browse to **{labs}/lab4** folder.
-20. Select both **pynq_zu_testapp.c** and **pynq_zu_audio.h** and click **Finish** to add the files to the project.
-21. Select **Test_system** inn the *Assistant* view, right-click and select **Build**. The program should compile successfully.
+12. In the **Source Files** page, browse to **{labs}/lab4** folder.
+13. Select both **pynq_z2_testapp.c** and **pynq_z2_audio.h** and click **Open** to add the files to the project.Click **Next**.
+14. In summary page, click **Finish**.
 
 ### Verify the Design in Hardware
 
 #### Connect a micro-usb cable between a PC and the JTAG port of the board. Connect an audio patch cable between the Line In jack and the speaker (headphone) out jack of a PC. Connect a headphone to the Line Out jack on the board. Power On the board.
 
-<!-- I do not have the necessary hardware available. It may be more appropriate for the relevant personnel in the company to verify this. -->
 1. Connect a micro-usb cable between a PC and the JTAG port of the board.
 2. Connect an audio patch cable between the **Line In** jack and the **speaker out** (headphone)  jack of a PC.
 3. Connect a headphone to the *HP+MIC* jack on board. Power **ON** the board.
-4. Select **Xilinx > Program Device**.
-5. Make sure that the **system_wrapper.bit** bitstream is selected.
-6. Click **Program**.
-   This will configure the FPGA.
-7. Double-click **corrupted_music_4KHz.wav** or some other wave file of interest to play it using the installed media player. Place it in the continuous play mode.
-8. Right-click on the *Test_system* in the **Assistant** view and select **Run > Run configuration**.
-9. Double-click on the *System Project Debug* to create the Run configuration, and then click on **Run**
-
+4. Click the **FLOW > Build** to build the application.
+5. Double-click **corrupted_music_4KHz.wav** or some other wave file of interest to play it using the installed media player. Place it in the continuous play mode.
+6.  Click **FLOW > Run** to run the application.
+   
    The program will be downloaded and run. If you want to listen to corrupted signal then set the **SW0 OFF**. To listened the filtered signal set the **SW0 ON**.
-10. When done, power OFF the board.
-11. Exit Vitis and Vivado using **File > Exit**.
+
+7.  When done, power OFF the board.
+8.  Exit Vivado using **File > Exit**, Vitis using **File > Close Window**.
 
 ## Conclusion
 
