@@ -31,7 +31,6 @@ After completing this lab, you will be able to:
     <i>Validating the design</i>
     </p>
     Note that the source files (dct.c and dct_test.c are compiled, then dct executable program was created, and then it was executed. The program tests the design and outputs Results are good message.)
-<!-- Note: I do not currently have access to a Linux system, so I am unsure how `make` works in Vitis HLS/Vitis 2024.2 on Linux. -->
 
 ### Create a New Project
 #### Create a new project in Vitis HLS GUI targeting xc7z020clg400-1.
@@ -159,9 +158,6 @@ After completing this lab, you will be able to:
     <i>Add PIPELINE off directive</i>
     </p>
    
-<!-- Make sure that the *Directive File* is selected as destination. Click **OK**. -->
-<!-- i don't see the option, and i don't know how it work, i just ignore it. -->
-
 5. Similarly, apply the **PIPELINE off** directive to **DCT_Outer_Loop**, **Row_DCT_Loop**, **Xpose_Row_Outer_Loop**, **Xpose_Row_Inner_Loop**, **Col_DCT_Loop**, **Xpose_Col_Outer_Loop**, **Xpose_Col_Inner_Loop**, **RD_Loop_Row**, **RD_Loop_Col**, **WR_Loop_Row**, and **WR_Loop_Col** objects. At this point, the *Directive* tab should look like as follows.
     <p align="center">
     <img src ="./images/lab3/Figure13.jpg">
@@ -193,20 +189,18 @@ select the **Clone Component**, then name a new component as **dct_solution3** (
 3. Select **HLS PINPELINE off** of **DCT_Inner_Loop** in the directives pane, 
 then click the **Edit Directive** icon in the same line.
 4. In the **Edit Directive** dialog box, click the **off** option to turn on the pipelining.
-<!-- 5. Leave II (Initiation Interval) blank as Vitis HLS will try for an II=1, one new input every clock cycle.
-6. Click **OK**. -->
-<!-- i don't know the vitis if have the setting -->
-5. Similarly, apply the **PIPELINE** directive to **Xpose_Row_Inner_Loop** and **Xpose_Col_Inner_Loop** of the dct_2d function, and **RD_Loop_Col** of the read_data function, and **WR_Loop_Col** of the write_data function. But remove the **PIPELINE** directive of **DCT_Outer_Loop**, **Row_DCT_Loop**, **Xpose_Row_Outer_Loop**, **Col_DCT_Loop**, **Xpose_Col_Outer_Loop**, **RD_Loop_Row** and **WR_Loop_Row**. At this point, the Directive tab should look like as follows.
+5. Leave II (Initiation Interval) blank as Vitis HLS will try for an II=1, one new input every clock cycle.
+6. Click **OK**.
+7. Similarly, apply the **PIPELINE** directive to **Xpose_Row_Inner_Loop** and **Xpose_Col_Inner_Loop** of the dct_2d function, and **RD_Loop_Col** of the read_data function, and **WR_Loop_Col** of the write_data function. But remove the **PIPELINE** directive of **DCT_Outer_Loop**, **Row_DCT_Loop**, **Xpose_Row_Outer_Loop**, **Col_DCT_Loop**, **Xpose_Col_Outer_Loop**, **RD_Loop_Row** and **WR_Loop_Row**. At this point, the Directive tab should look like as follows.
     <p align="center">
     <img src ="./images/lab3/Figure16.jpg">
     </p>
     <p align = "center">
     <i>PIPELINE directive applied</i>
     </p>
-6.  Click on the **FLOW > C SYNTHESIS > Run** button.
-7.  When the synthesis is completed, select **View > HLS Compare Reports**, select the **dct_solution2** and **dct_solution3** to compare the two solutions.
-8.  Observe that the latency reduced from *5990* to *1323* clock cycles.
-<!-- i don't know why the latency different with the same pipeline directive setting -->
+8.  Click on the **FLOW > C SYNTHESIS > Run** button.
+9.  When the synthesis is completed, select **View > HLS Compare Reports**, select the **dct_solution2** and **dct_solution3** to compare the two solutions.
+10. Observe that the latency reduced from *5990* to *1323* clock cycles.
 <p align="center">
 <img src ="./images/lab3/Figure17.jpg">
 </p>
@@ -215,7 +209,7 @@ then click the **Edit Directive** icon in the same line.
 </p>
 
 
-9.  Scroll down in the comparison report to view the resources utilization. Observe that the FFs and/or LUTs utilization increased whereas BRAM and DSP48E remained same.
+1.  Scroll down in the comparison report to view the resources utilization. Observe that the FFs and/or LUTs utilization increased whereas BRAM and DSP48E remained same.
     <p align="center">
     <img src ="./images/lab3/Figure18.jpg">
     </p>
@@ -415,6 +409,9 @@ default memory buffers (of ping-pong type) are automatically inserted between th
 loops. The console logs can provide insight on what is going on.
 
 ## Answers
+
+<sub>"Note: These answers are based on the settings from the previous version and may not be accurate for the current version. Please verify with the latest synthesis report."</sub>
+
 **Answers for question 1:**  
 Estimated clock period: **6.508 ns**   
 Worst case latency: **423 clock cycles**   

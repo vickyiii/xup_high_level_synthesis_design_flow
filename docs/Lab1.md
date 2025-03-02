@@ -27,7 +27,7 @@ After completing this lab, you will be able to:
     <p align = "center">
     <i>Getting Started view of Vitis</i>
     </p>
-2. Click the *Browse…* button of the Location field and browse to **{labs}\\lab1** on a Windows machine or **{labs}/lab1** on a Linux machine creating sub-folders as necessary, and then click **OK**.
+2. Click the *Browse…* button of the Location field and browse to **{labs}\lab1** on a Windows machine or **{labs}/lab1** on a Linux machine creating sub-folders as necessary, and then click **OK**.
    
    Note: From this point onward reference will be made to Linux name.
 
@@ -310,6 +310,9 @@ And set the cosim.wave_debug.Then change the cosim.trace+level from None to all.
 In this lab, you completed the major steps of the high-level synthesis design flow using Vitis. You created a project, adding source files, synthesized the design, simulated the design, and implemented the design. You also learned how to use the Analysis capability to understand the scheduling and binding.
 
 ## Answers
+
+<sub>"Note: These answers are based on the settings from the previous version and may not be accurate for the current version. Please verify with the latest synthesis report."</sub>
+
 **Answers for question 1:**  
 Estimated clock period: **6.816 ns**   
 Worst case latency: **24 clock cycles**   

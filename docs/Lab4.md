@@ -36,7 +36,6 @@ Download the audio ctrl IP from https://github.com/Xilinx/PYNQ/tree/master/board
 
 #### Create a new project in Vitis HLS targeting xc7z020clg400-1device
 
-<!-- it should be xc7z020clg400-1 -->
 
 1. Launch Vitis: Select **Create Component... > Create Empty HLS Component**.
 2. Click **Browse…** button of the *Location* field, browse to **{labs}/lab4**, and set the **Component name** as **fir**.
@@ -61,9 +60,11 @@ Download the audio ctrl IP from https://github.com/Xilinx/PYNQ/tree/master/board
        </p>
 
     The FIR filter expects **x** as a sample input and pointer to the computed sample out **y**. Both of them are defined of data type data_t. The coefficients are loaded in array **c** of type coef_t from the file called *fir_coef.dat* located in the current directory. The sequential algorithm is applied and accumulated value (sample out) is computed in variable acc of type acc_t.
-<!-- here i can't find the fir.h on the vitis, but i can right click the **fir.h** and select Go to Declaration find it...-->
+
 <!-- this picture have problem cuz i using the absolute path-->
-12. Right-click on the **fir.h** in the **fir.c** and select **Go Declaration**.
+<sub> if you have the same problem of include h file, please try to use the absolute path to include the file</sub>
+
+1.  Right-click on the **fir.h** in the **fir.c** and select **Go Declaration**.
    <p align="center">
    <img src ="./images/lab4/Figure2.jpg">
    </p>
@@ -73,7 +74,7 @@ Download the audio ctrl IP from https://github.com/Xilinx/PYNQ/tree/master/board
 
    The header file includes **ap_cint.h** so user defined data width (of arbitrary precision) can be used. It also defines number of taps (N), number of samples to be generated (in the testbench), and data types coef_t, data_t, and acc_t. The coef_t and data_t are short (16 bits). Since the algorithm iterates (multiply and accumulate) over 59 taps, there is a possibility of bit growth of 6 bits and hence acc_t is defined as int38. Since the acc_t is bigger than sample and coefficient width, they have to cast before being used (like in lines 16, 18, and 21 of fir.c).
 
-13. Click on the **fir_test.c** under the testbench folder to open its content in the information pane.
+2.  Click on the **fir_test.c** under the testbench folder to open its content in the information pane.
 
     Notice that the testbench opens fir_impulse.dat in write mode, and sends an impulse (first sample being 0x8000).
 
@@ -370,7 +371,7 @@ Number of LUTs used: **257**
 
 ### Creating the System Using the IP Integrator
 
-<!-- there are the same in the vivado 24.2, i think it can not update -->
+<!-- there are look like same in the vivado 24.2, i think it can not update -->
 #### Use the IP Integrator to create a new Block Design, and generate the ARM Cortex-A9 processor based hardware system.
 
 1. In the *Flow Navigator*, click **Create Block Design** under IP Integrator
