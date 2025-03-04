@@ -1,14 +1,14 @@
-# Vitis HLS Design Flow Lab
+# Vitis Design Flow Lab
 
 ## Introduction
 
-This lab provides a basic introduction to high-level synthesis using the Vitis HLS tool flow. You will use Vitis HLS in GUI mode to create a project. You will simulate, synthesize, and implement the provided design.
+This lab provides a basic introduction to high-level synthesis using the Vitis flow. You will use Vitis to create a project. You will simulate, synthesize, and implement the provided design.
 
 ## Objectives
 
 After completing this lab, you will be able to:
 
-* Create a new project using Vitis HLS in GUI mode
+* Create a new project using Vitis
 * Simulate a C design by using a self-checking test bench
 * Synthesize the design
 * Perform design analysis using the Analysis Perspective view
@@ -20,56 +20,60 @@ After completing this lab, you will be able to:
 ### Create a New Project
 
 #### Create a new project in Vitis HLS targeting PYNQ-Z2 board
-1. Launch Vitis HLS: Select **Start > Xilinx Design Tools > Vivado 2021.2 > Vitis HLS 2021.2**
-
-   You can also invoke Vitis HLS from Vitis HLS Command prompt by selecting **Start > Xilinx Design Tools > Vitis HLS 2021.2 Command Prompt** and then typing
-   **vitis_hls** in the terminal.
-
+1. Launch Vitis: Select **Create Component... > Create Empty HLS Component**
     <p align="center">
-    <img src ="./images/lab1/Figure1.png">
+    <img src ="./images/lab1/Figure1.jpg">
     </p>
     <p align = "center">
-    <i>Getting Started view of Vitis HLS</i>
+    <i>Getting Started view of Vitis</i>
     </p>
-2. In the Getting Started GUI, click on **Create Project**. The **New Vitis HLS Project** wizard opens.
-3. Click the *Browse…* button of the Location field and browse to **{labs}\\lab1** on a Windows machine or **{labs}/lab1** on a Linux machine creating sub-folders as necessary, and then click **OK**.
-
+2. Click the *Browse…* button of the Location field and browse to **{labs}\lab1** on a Windows machine or **{labs}/lab1** on a Linux machine creating sub-folders as necessary, and then click **OK**.
+   
    Note: From this point onward reference will be made to Linux name.
 
-4. For Project Name, type **matrixmul**.
+3. For Project Name, type **matrixmul**.
     <p align="center">
-    <img src ="./images/lab1/Figure2.png">
+    <img src ="./images/lab1/Figure2.jpg">
     </p>
     <p align = "center">
     <i>New Vitis HLS Project wizard</i>
     </p>
-5. Click **Next**.
-6. In the *Add/Remove Design Files* window, type **matrixmul** as the *Top Function* name (the provided source file contains the function, called matrixmul, to be synthesized).
-7. Click the *Add Files…* button, select **matrixmul.cpp** file from the **{labs}/lab1** folder, and then click **Open**.
-8. Click **Next**.
-9. In the *Add/Remove Testbench Files* for the testbench, click the *Add Files…* button, select **matrixmul_test.cpp** file from the **/home/xup/hls/labs/lab1** folder and click **Open**.
-10. Select the **matrixmul_test.cpp** in the files list window and click the *Edit CFLAG…* button, type **-DHW_COSIM**, and click **OK**. (This defines a compiler flag that will be used later.)
-11. Click **Next**.
-12. In the *Solution Configuration* page, leave **Solution** Name field as *solution1* and set the clock period as 10.
-13. Click the **…** (browse) button of the *Part Selection* section.
-14. In the *Device Selection* page, select **Parts Specify** field, enter  **xc7z020clg400-1** in the *Search* field and click **OK**.
+
+4. Click **Next**.
+5. In the *Configuration File* window, select the *Empty File* option and click **Next**.
+6. In the *Source Files* window, type **matrixmul** as the *Top Function* name (the provided source file contains the function, called matrixmul, to be synthesized).
+7. Click the *Add Files…* button (which in the line of DESIGN FILES), select **matrixmul.cpp** file from the **{labs}/lab1** folder, and then click **Open**.
+8. Then we add the test file, in the next block click *Add Files…* button (which in the line of TEST BENCH FILES), select **matrixmul_test.cpp** file from the **/home/xup/hls/labs/lab1** folder and click **Open**.
+9.  Select the **matrixmul_test.cpp** in the files list window and click the *Edit CFLAG…* button, type</P> **-DHW_COSIM** (there has  a "-" in here, don't forget it), and click **OK**. (This defines a compiler flag that will be used later.)
+10. Click **Next**.
     <p align="center">
-    <img src ="./images/lab1/Figure3.png">
+    <img src ="./images/lab1/Figure3.jpg">
     </p>
     <p align = "center">
-    <i>Using Parts Specify option in Part Selection Dialog</i>
+    <i>Source Files setting</i>
     </p>
-15. Click **Finish**.
-    You will see the created project in the *Explorer* view. Expand various sub-folders to see the entries under each sub-folder.
+
+11. In the *Hardware* page, select **Part** field, enter  **xc7z020clg400-1** in the *Search* field and click **next**.</p>
+<sub>here you should select the device that you are using, In my class Zedboard using xc7z020clg484-1</sub>
     <p align="center">
-    <img src ="./images/lab1/Figure4.png">
+    <img src ="./images/lab1/Figure4.jpg">
+    </p>
+    <p align = "center">
+    <i>Using Search to selcet the chip</i>
+    </p>
+
+12. In the *Settings* page, type 10ns in the clock.Click **next**. 
+13. Click **Finish**.
+    You will see the created project in the *VITIS COMPOMENTS* view. Expand various sub-folders to see the entries under each sub-folder.
+    <p align="center">
+    <img src ="./images/lab1/Figure5.jpg">
     </p>
     <p align = "center">
     <i>Explorer Window</i>
     </p>
-16. Double-click on the **matrixmul.cpp** under the source folder to open its content in the information pane.
+14. Double-click on the **matrixmul.cpp** under the source folder to open its content in the information pane.
     <p align="center">
-    <img src ="./images/lab1/Figure5.png">
+    <img src ="./images/lab1/Figure6.jpg">
     </p>
     <p align = "center">
     <i>The Design under consideration</i>
@@ -78,10 +82,11 @@ After completing this lab, you will be able to:
 
 ### Run C Simulation
 
-1. Select **Project > Run C Simulation**, and click **OK** in the C Simulation Dialog window.
+1. Select **FLOW > C Simulation > Run**.</p>
+   <sub>it may be have a windows ask if Enable Code Analyzer, click **Yes, enable Code Analyzer**</sub></p>
     The files will be compiled and you will see the output in the Console window.
     <p align="center">
-    <img src ="./images/lab1/Figure6.png">
+    <img src ="./images/lab1/Figure7.jpg">
     </p>
     <p align = "center">
     <i>Program output</i>
@@ -94,77 +99,76 @@ After completing this lab, you will be able to:
 ### Run Debugger
 
 #### Run the application in debugger mode and understand the behavior of the program.
-1. Select **Project > Run C Simulation**. Select the **Launch Debugger** option and click **OK**.
-
+1. Click **Debug** below the **Run** . 
+   
    The application will be compiled with **–g** option to include the debugging information, the compiled application will be invoked, and the debug perspective will be opened automatically.
-2. The *Debug* perspective will show the **matrixmul_test.cpp** in the source view, **argc** and **argv** variables defined in the *Variables* view, thread created and the program suspended at the main() function entry point in the *Debug* view.
+2. The *Debug* perspective will show the **matrixmul_test.cpp** in the source view, **argc** and **argv** variables defined in the **Variables > Local**, thread created and the program suspended at the main() function entry point in the *Debug* view.
     <p align="center">
-    <img src ="./images/lab1/Figure7.png">
+    <img src ="./images/lab1/Figure8.jpg">
     </p>
     <p align = "center">
     <i>A Debug perspective</i>
     </p>
 
-3. Scroll-down in the *source* view, and double-click in the blue margin at line 67 where it is about to output **“{“** in the output console window. This will set a break-point at line 67.
+3. Scroll-down in the *source* view, and click in the left size of the line 67 where it is about to output **“{“** in the output console window. This will set a break-point at line 67.
 
-    The breakpoint is marked with a blue circle, and a tick.
+    The breakpoint is marked with a red circle.
 
     <p align="center">
-    <img src ="./images/lab1/Figure8.png">
+    <img src ="./images/lab1/Figure9.jpg">
     </p>
     <p align = "center">
     </p>
 4. Similarly, set a breakpoint at line 63 in the matrixmul() function.
-5. Using the **Step Over** (F6) button several times, observe the execution progress, and observe the variable values updating, as well as computed software result.
+5. Using the **Step Over** (F10) button several times, observe the execution progress, and observe the variable values updating, as well as computed software result.
     <p align="center">
-    <img src ="./images/lab1/Figure9.png">
+    <img src ="./images/lab1/Figure10.jpg">
     </p>
     <p align = "center">
     <i>Debugger’s intermediate output view</i>
     </p>
-6. Now click the **Resume** button or F8 to complete the software computation and stop at line 63.
+6. Now click the **Restart** button or *ctrl+shift+F5* and then click the **Continue** or F5 to complete the software computation and stop at line 63.
 7. Observe the following computed software result in the variables view.
     <p align="center">
-    <img src ="./images/lab1/Figure10.png">
+    <img src ="./images/lab1/Figure11.jpg">
     </p>
     <p align = "center">
     <i>Software computed result</i>
     </p>
-8. Click on the **Step Into** (F5) button to traverse into the **matrixmul** module, the one that we will synthesize, and observe that the execution is paused on line 37 of the module.
-9. Using the **Step Over** (F6) several times, observe the computed results. Once satisfied, you can use the **Step Return** (F7) button to return from the function.
-10. The program execution will suspend at line 105 as we had set a breakpoint. Observe the software and hardware (function) computed results in the Variables view.
-    <p align="center">
-    <img src ="./images/lab1/Figure11.png">
-    </p>
-    <p align = "center">
-    <i>Computed results</i>
-    </p>
-11. Set a breakpoint on line 96 (return err_cnt;), and click on the **Resume** button.
-    The execution will continue until the breakpoint is encountered. The console window will show the results as seen earlier (Figure 7).
-12. Press the **Resume** button or **Terminate** button to finish the debugging session.
+8. Click on the **Step Into** (F11) button to traverse into the **matrixmul** module, the one that we will synthesize, and observe that the execution is paused on line 37 of the module.
+9.  Using the **Step Over** (F6) several times, observe the computed results. Once satisfied, you can use the **Restart** and **Continue** back to the line 63.
+10. Set a breakpoint on line 96 (return err_cnt;), and click on the **Continue** button.
+    The execution will continue until the breakpoint is encountered. The console window will show the results as seen earlier (Figure 11, which is up there).
+11. Press the **Continue** button to finish the debugging session.
 
 ### Synthesize the Design
 
 #### Switch to Synthesis view and synthesize the design with the defaults. View the synthesis results and answer the question listed in the detailed section of this step.
 
-1. Switch to the *Synthesis* view by clicking **Exit Debug** button.
-2. Select **Solution > Run C Synthesis > Active Solution** to start the synthesis process.
-3. When the synthesis process is completed, the synthesis results will be displayed along with the Outline pane. Using the Outline pane, one can navigate to any part of the report with a simple click.
+1. Switch to the *Synthesis* view by clicking **Vitis Components** button.
     <p align="center">
-    <img src ="./images/lab1/Figure12.png">
+    <img src ="./images/lab1/Figure12.jpg">
+    </p>
+    <p align = "center">
+    <i>The botton</i>
+    </p>
+2. Select **FLOW > C SYNTHESIS > Run** to start the synthesis process.
+3. When the synthesis process is completed, Select **C SYNTHESIS > REPORTS > Synthesis** to oepn the synthesis page.
+    <p align="center">
+    <img src ="./images/lab1/Figure13.jpg">
     </p>
     <p align = "center">
     <i>Report view after synthesis is completed</i>
     </p>
-4. If you expand **solution1** in Explorer, several generated files including report files will become accessible.
+4. If you expand **Output > syn** in Explorer, several generated files including report files will become accessible.
     <p align="center">
-    <img src ="./images/lab1/Figure13.png">
+    <img src ="./images/lab1/Figure14.jpg">
     </p>
     <p align = "center">
     <i>Explorer view after the synthesis process</i>
     </p>
 
-    Note that when the **syn** folder under the *Solution1* folder is expanded in the *Explorer* view, it will show *report, verilog,* and *vhdl* sub-folders under which report files, and generated source (vhdl, verilog, header, and cpp) files. By double-clicking any of these entries one can open the corresponding file in the information pane.
+    Note that when the **syn** folder under the *Output* folder is expanded in the *Explorer* view, it will show *report, verilog,* and *vhdl* sub-folders under which report files, and generated source (vhdl, verilog, header, and cpp) files. By double-clicking any of these entries one can open the corresponding file in the information pane.
 
     Also note that if the target design has hierarchical functions, reports corresponding to lower-level functions are also created.
 5. The *Synthesis Report* shows the performance and resource estimates as well as estimated latency in the design.
@@ -178,9 +182,9 @@ After completing this lab, you will be able to:
     Number of FFs used:   
     Number of LUTs used:  
 
-7. The report also shows the top-level interface signals generated by the tools.
+7. The report also shows the top-level interface signals generated by the tools.This can be see in the Synthesis page down below.
     <p align="center">
-    <img src ="./images/lab1/Figure14.png">
+    <img src ="./images/lab1/Figure15.jpg">
     </p>
     <p align = "center">
     <i>Generated interface signals</i>
@@ -192,21 +196,21 @@ After completing this lab, you will be able to:
 
 #### Switch to the Analysis Perspective and understand the design behavior.
 
-1. Select **Solution > Open Schedule Viewer** or click on *Analysis* button on tools bar to open the analysis viewer.
+1. Select **C SYNTHESIS > REPORTS > Schedule Viewer** to open the analysis viewer.
 
     The Analysis perspective consists of 4 panes as shown below. Note that the module and loops hierarchies are displayed unexpanded by default.
     The **Module Hierarchy** pane shows both the performance and area information for the entire design and can be used to navigate through the hierarchy. The **Performance Profile** pane is visible and shows the performance details for this level of hierarchy. The information in these two panes is similar to the information reviewed earlier in the synthesis report.
     The **Schedule Viewer** is also shown in the right-hand side pane. This view shows how the operations in this particular block are scheduled into clock cycles.
 
     <p align="center">
-    <img src ="./images/lab1/Figure15.png">
+    <img src ="./images/lab1/Figure16.jpg">
     </p>
     <p align = "center">
     <i>Analysis perspective</i>
     </p>
 2. Click on **>** of loop *Row_Col* to expand.
     <p align="center">
-    <img src ="./images/lab1/Figure16.png">
+    <img src ="./images/lab1/Figure17.jpg">
     </p>
     <p align = "center">
     <i>Performance matrix showing top-level Row operation</i>
@@ -216,27 +220,17 @@ After completing this lab, you will be able to:
 3. Select the block for the **adder** ( **add_in75_3(+)**), right-click and select **Goto Source**.
     The source code pane will be opened, highlighting line 37 where the loop index is being tested and incremented.
     <p align="center">
-    <img src ="./images/lab1/Figure17.png" width="60%" height="80%"/>
+    <img src ="./images/lab1/Figure18.jpg" width="60%" height="80%"/>
     </p>
     <p align = "center">
     <i>Cross probing into the source file</i>
     </p>
-4. Click on the **Synthesis** tool bar button to switch back to the *Synthesis* view.
+4. Click on the **Schedule Viewer** tool bar button to switch back to the *Synthesis* view.
 
 ### Run C/RTL Co-simulation
 
 #### Run the C/RTL Co-simulation with the default settings of VHDL. Verify that the simulation passes.
-1. Select **Solution > Run C/RTL Cosimulation** to open the dialog box so the desired simulations can be selected and run.
-    A **C/RTL Co-simulation Dialog box** will open.
-2. Make sure the **VHDL** option is selected.
-    This allows the simulation to be performed using VHDL generated model. To perform the verification using Verilog, you can select Verilog.
-    <p align="center">
-    <img src ="./images/lab1/Figure20.png">
-    </p>
-    <p align = "center">
-    <i>A C/RTL Co-simulation Dialog</i>
-    </p>
-3. Click **OK** to run the VHDL simulation.
+1. Select **FLOW > C/RTL COSIMULATION > Run**, it will automatically run. Wait for tge COSIMULATION to complete.
     The C/RTL Co-simulation will run, generating and compiling several files, and then simulating the design. It goes through three stages.
     First, the VHDL test bench is executed to generate input stimuli for the RTL design.  
     Second, an RTL test bench with newly generated input stimuli is created and the RTL simulation is then performed.  
@@ -245,140 +239,80 @@ After completing this lab, you will be able to:
     This eliminates writing a separate testbench for the synthesized design.
 
     <p align="center">
-    <img src ="./images/lab1/Figure21.png">
+    <img src ="./images/lab1/Figure19.jpg">
     </p>
     <p align = "center">
     <i>Console view showing simulation progress</i>
     </p>
 
-4. Once the simulation verification is completed, the simulation report tab will open showing the results. The report indicates if the simulation passed or failed. In addition, the report indicates the measured latency and interval.
+2. Once the simulation verification is completed, the simulation report tab will open showing the results. Click **C/TRL COSIMULATION > REPORTS > Cosimulation** to see report.The report indicates if the simulation passed or failed. In addition, the report indicates the measured latency and interval.
+   
     Since we have selected only VHDL, the result shows the latencies and interval (initiation) which indicates after how many clock cycles later the next input can be provided.
 
     <p align="center">
-    <img src ="./images/lab1/Figure22.png">
+    <img src ="./images/lab1/Figure21.jpg">
     </p>
     <p align = "center">
     <i>Co-simulation results</i>
     </p>
 
-### Viewing Simulation Results in Vivado
-
-#### Run Verilog simulation with Dump Trace option selected.
-1. Select **Solution > Run C/RTL Co-simulation** to open the dialog box so the desired simulations can be run.
-2. Click on the **Verilog** selection option.
-
-   Optionally, you can click on the drop-down button and select the desired simulator from the available list of Vivado XSim, ModelSim, Xcelium, VCS, and Riviera.
-3. Select **All** for the *Dump Trace* option and click **OK**.
-    <p align="center">
-    <img src ="./images/lab1/Figure23.png">
-    </p>
-    <p align = "center">
-    <i>Setting up for Verilog simulation and dump trace</i>
-    </p>
-    When RTL verification completes, the co-simulation report automatically opens showing the Verilog simulation has passed (and the measured latency and interval). In addition, because the *Dump Trace* option was used and Verilog was selected, two trace files entries can be seen in the Verilog simulation directory.
-
-    <p align="center">
-    <img src ="./images/lab1/Figure24.png">
-    </p>
-    <p align = "center">
-    <i>Explorer view after the Verilog RTL co-simulation run</i>
-    </p>
-
-    The Co-simulation report shows the test was passed for Verilog along with latency and Interval results.
-    <p align="center">
-    <img src ="./images/lab1/Figure25.png">
-    </p>
-    <p align = "center">
-    <i>Cosimulation report</i>
-    </p>
-
 #### Analyze the dumped traces.
 
-1. Click on the ![wave_viewer](images/lab1/waveviewer.png) button on tools bar to open the wave viewer. This will start Vivado 2021.2 and open the wave viewer.
-2. Click on the zoom fit tool button ( ) to see the entire simulation of one iteration.
-3. Select *a_address0* in the waveform window, right-click and select **Radix > Unsigned Decimal**.
-    Similarly, do the same for *b_address0*, *a_address1*, *b_address1* and *res_address0* signals.
-4. Similarly, set the *a_q0, b_q0, a_q1, b_q1* and *res_d0* radix to **Signed Decimal**.
-    You should see the output similar to shown below.
+1. You will see the Wave Viewer can't use with the![warning](images/lab1/warning.jpg), click it and we search the **wave** in the **hls_config.cfg**.
+And set the cosim.wave_debug.Then change the cosim.trace+level from None to all.</p>
     <p align="center">
-    <img src ="./images/lab1/Figure26.png">
+    <img src ="./images/lab1/Figure22.jpg">
+    </p>
+    <p align = "center">
+    <i>Change the setting</i>
+    </p>
+2. Next click **C/TRL COSIMULATION > Run** again, the vivado will open.
+
+3. You should click the **Run for 1μs** in the vivado.
+    <p align="center">
+    <img src ="./images/lab1/Figure23.jpg">
     </p>
     <p align = "center">
     <i>Full waveform showing iteration worth simulation</i>
     </p>
-    Note that as soon as *ap_start* is asserted, *ap_idle* has been de-asserted indicating that the design is in computation mode. The *ap_idle* signal remains de-asserted until *ap_done* is asserted, indicating completion of the process. This indicates 24 clock cycles latency.
-5. View various part of the simulation and try to understand how the design works.
-6. When done, close Vivado by selecting **File > Exit**. Click **OK** if prompted, and then **Discard** to close the program without saving.
+
+4. View various part of the simulation and try to understand how the design works.
+5. When done, close Vivado, click **ok** if prompted.
 
 ### Export RTL and Implement
 
 #### In Vitis HLS, export the design, selecting VHDL as a language, and run the implementation by selecting Evaluate option.
-1. In Vitis HLS, select **Solution > Export RTL** to open the dialog box.
+1. In Vitis HLS, select **FLOW > IMPLEMENTATION >** wait for implemntation finished.
     An Export RTL Dialog box will open.
     <p align="center">
-    <img src ="./images/lab1/Figure28.png">
+    <img src ="./images/lab1/Figure24.jpg">
     </p>
     <p align = "center">
-    <i>A Export RTL Dialog box</i>
+    <i>Run Implemntation Done</i>
     </p>
-    With default settings (shown above), the IP packaging process will run and create a package for the Vivado IP Catalog. Another option available from the Export Format drop-down menu, is to create a Vivado IP for System Generator.
-2. Select **Solution > Implementation** to open the dialog box..
-3. Click on the drop-down menu of the **RTL** field and select **VHDL**.
-4. Click on the *RTL Synthesis, Place & Route* check box to run the implementation tool.
+2. Click the **FLOW > IMPLEMENTATION > REPORTS > RTL Synthesis** to see the report.
     <p align="center">
-    <img src ="./images/lab1/Figure29.png">
+    <img src ="./images/lab1/Figure25.jpg">
     </p>
     <p align = "center">
-    <i>Selecting Evaluate options</i>
+    <i>RTL Synthesis report</i>
     </p>
-5. Click **OK** and the implementation run will begin.
-
-    You can observe the progress in the Vitis HLS Console window. It goes through several phases:
-    * Exporting RTL as an IP in the IP-XACT format
-    * RTL evaluation, since we selected Evaluate option, it goes through Synthesis and then through Placement and Routing
+3. You can see the **xilinx_com_hls_matrixmul_1_0.zip** on **impl > ip**.which can be added to the Vivado IP catalog.
     <p align="center">
-    <img src ="./images/lab1/Figure30.png">
-    </p>
-    <p align = "center">
-    <i>Console view</i>
-    </p>
-    When the run is completed the implementation report will be displayed in the information pane.
-    <p align="center">
-    <img src ="./images/lab1/Figure31.png">
-    </p>
-    <p align = "center">
-    <i>Implementation results in Vitis HLS </i>
-    </p>
-    Observe that the timing constraint was met, the achieved period, and the type and amount of resources used.
-    <p align="center">
-    <img src ="./images/lab1/Figure32.png">
-    </p>
-    <p align = "center">
-    <i>Explorer view after the RTL Export run </i>
-    </p>
-6. Expand the Verilog and vhdl sub-folders and observe that the Verilog sub-folder only has the rtl file whereas the vhdl sub-folder has several files and sub-folders as the synthesis and implementation runs were made for it.
-
-    It includes project.xpr file (the Vivado project file), matrixmul.xdc file (timing constraint file), project.runs folder among others.
-    <p align="center">
-    <img src ="./images/lab1/Figure33.png">
-    </p>
-    <p align = "center">
-    <i>The implementation directory</i>
-    </p>
-
-7. Expand the **ip** folder and observe the IP packaged as a zip file, **xilinx_com_hls_matrixmul_1_0.zip**, which can be added to the Vivado IP catalog.
-    <p align="center">
-    <img src ="./images/lab1/Figure34.png" width="40%" height="80%">
+    <img src ="./images/lab1/Figure26.jpg" width="40%" height="80%">
     </p>
     <p align = "center">
     <i>The ip folder content</i>
     </p>
-8. Close Vitis HLS by selecting **File > Exit**.
+4. Close Vitis by selecting **File > Close Window**.
 
 ## Conclusion
-In this lab, you completed the major steps of the high-level synthesis design flow using Vitis HLS. You created a project, adding source files, synthesized the design, simulated the design, and implemented the design. You also learned how to use the Analysis capability to understand the scheduling and binding.
+In this lab, you completed the major steps of the high-level synthesis design flow using Vitis. You created a project, adding source files, synthesized the design, simulated the design, and implemented the design. You also learned how to use the Analysis capability to understand the scheduling and binding.
 
 ## Answers
+
+<sub>"Note: These answers are based on the settings from the previous version and may not be accurate for the current version. Please verify with the latest synthesis report."</sub>
+
 **Answers for question 1:**  
 Estimated clock period: **6.816 ns**   
 Worst case latency: **24 clock cycles**   
@@ -386,4 +320,4 @@ Number of DSP48E used: **2**
 Number of FFs used: **66**   
 Number of LUTs used: **365**   
 ------------------------------------------------------
-<p align="center">Copyright&copy; 2022, Advanced Micro Devices, Inc.</p>
+<p align="center">Copyright&copy; 2024, Advanced Micro Devices, Inc.</p>

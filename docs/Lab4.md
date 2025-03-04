@@ -21,7 +21,7 @@ The design consists of a FIR filter to filter a 4 KHz tone added to CD quality (
     FPASS1=2000 Hz
     FSTOP1=3800 Hz
     FSTOP2=4200 Hz
-    FPASS2=6000 Hz
+    FPASS2=6000 Hzn
     APASS1=APASS2=1 dB
     ASTOP=60 dB
 This lab requires you to develop a peripheral core of the designed filter that can be instantiated in a processor system. The processor system will acquire a stereo music stream using an on-board CODEC chip and I2C controller, process it through the designed filter (bandstop filter), and output back to the headphone.
@@ -30,48 +30,51 @@ This lab requires you to develop a peripheral core of the designed filter that c
 
 ### Downdload the audio ctrl IP
 
-Download the audio ctrl IP from https://github.com/Xilinx/PYNQ/tree/master/boards/ip/audio_codec_ctrl_v1.0/src, and put these 10 files into the **{labs}/lab4/ip_repo/zed_audio_ctrl/zed_audio_ctrl.srcs/sources_1/imports/i2s_audio** folder.
+Download the audio ctrl IP from https://github.com/Xilinx/PYNQ/tree/master/boards/ip/audio_codec_ctrl_v1.0, and put the file into the **{labs}/lab4/ip_repo/** folder.
 
 ### Create a New Project
 
-#### Create a new project in Vitis HLS targeting xczu5eg-sfvc784-1-e device
+#### Create a new project in Vitis HLS targeting xc7z020clg400-1device
 
-1. Invoke Vitis HLS Command prompt by selecting **Start > Xilinx Design Tools > Vitis HLS 2021.2 Command Prompt** then type **vitis_hls** in the terminal.
-   A **Getting Started GUI** will appear.
-2. In the *Getting Started* section, click on *Create Project*. The **New Vitis HLS Project** wizard opens.
-3. Click **Browse…** button of the *Location* field, browse to **{labs}/lab4**, and then click **OK**.
-4. For *Project* Name, type **fir** and click **Next**.
-5. In the *Add/Remove Files* for the source files, type **fir** as the function name (the provided source file contains the function, to be synthesized, called fir).
-6. Click the *Add Files…* button, select **fir.c** and **fir_coef.dat** files from the **{labs}/lab4** folder, and then click **Open**.
-7. Click **Next**.
-8. In the *Add/Remove Testbench Files* for the testbench, click the *Add Files…* button, select **fir_test.c** file from the **{labs}/lab4** folder and click **Open**.
-9. Click **Next**.
-10. In the *Solution Configuration* page, leave *Solution* Name field as *solution1* and make sure the clock period as **10**. Leave Uncertainty field blank.
-11. Click on the Part’s Browse button and using the *Parts Specify* option, select **xczu5eg-sfvc784-1-e**.
-12. Click **Finish**.
 
+1. Launch Vitis: Select **Create Component... > Create Empty HLS Component**.
+2. Click **Browse…** button of the *Location* field, browse to **{labs}/lab4**, and set the **Component name** as **fir**.
+3. In the **Configuration** tab, click **Next**.
+4. In the **Source Files** for the source files, type **fir** as the top function name (the provided source file contains the function, to be synthesized, called fir).
+5. Click the *Add Files…* button (which in the line of DESIGN FILES), select **fir.c** and **fir_coef.dat** files from the **{labs}/lab4** folder, and then click **Open**.
+6. Then we add the test file, in the next block click *Add Files…* button (which in the line of TEST BENCH FILES), select **fir_test.c** file from the **{labs}/lab4** folder and click **Open**.
+7.  Click **Next**.
+8.  In the *Hardware* page, select **Part** field, enter  **xc7z020clg400-1** in the *Search* field and click **next**.
+9.  In the *Settings* page, type 10ns in the clock.Click **next**.
+10. Click **Finish**.
+    
     You will see the created project in the Explorer view. Expand various sub-folders to see the entries under each sub-folder.
-13. Double-click on the *fir.c* under the *source* folder to open its content in the information pane.
+
+11. Click on the *fir.c* under the *source* folder to open its content in the information pane.
 
     <p align="center">
-       <img src ="./images/lab4/Figure1.png">
+       <img src ="./images/lab4/Figure1.jpg">
        </p>
        <p align = "center">
        <i>The design under consideration</i>
        </p>
 
     The FIR filter expects **x** as a sample input and pointer to the computed sample out **y**. Both of them are defined of data type data_t. The coefficients are loaded in array **c** of type coef_t from the file called *fir_coef.dat* located in the current directory. The sequential algorithm is applied and accumulated value (sample out) is computed in variable acc of type acc_t.
-14. Double-click on the **fir.h** in the outline tab to open its content in the information pane.
 
-    <p align="center">
-     <img src ="./images/lab4/Figure2.png">
-     </p>
-     <p align = "center">
-     <i>The header file</i>
-     </p>
+<!-- this picture have problem cuz i using the absolute path-->
+<sub> if you have the same problem of include h file, please try to use the absolute path to include the file</sub>
 
-    The header file includes **ap_cint.h** so user defined data width (of arbitrary precision) can be used. It also defines number of taps (N), number of samples to be generated (in the testbench), and data types coef_t, data_t, and acc_t. The coef_t and data_t are short (16 bits). Since the algorithm iterates (multiply and accumulate) over 59 taps, there is a possibility of bit growth of 6 bits and hence acc_t is defined as int38. Since the acc_t is bigger than sample and coefficient width, they have to cast before being used (like in lines 16, 18, and 21 of fir.c).
-15. Double-click on the **fir_test.c** under the testbench folder to open its content in the information pane.
+1.  Right-click on the **fir.h** in the **fir.c** and select **Go Declaration**.
+   <p align="center">
+   <img src ="./images/lab4/Figure2.jpg">
+   </p>
+   <p align = "center">
+   <i>The header file</i>
+   </p>
+
+   The header file includes **ap_cint.h** so user defined data width (of arbitrary precision) can be used. It also defines number of taps (N), number of samples to be generated (in the testbench), and data types coef_t, data_t, and acc_t. The coef_t and data_t are short (16 bits). Since the algorithm iterates (multiply and accumulate) over 59 taps, there is a possibility of bit growth of 6 bits and hence acc_t is defined as int38. Since the acc_t is bigger than sample and coefficient width, they have to cast before being used (like in lines 16, 18, and 21 of fir.c).
+
+2.  Click on the **fir_test.c** under the testbench folder to open its content in the information pane.
 
     Notice that the testbench opens fir_impulse.dat in write mode, and sends an impulse (first sample being 0x8000).
 
@@ -79,10 +82,10 @@ Download the audio ctrl IP from https://github.com/Xilinx/PYNQ/tree/master/board
 
 #### Run C simulation to observe the expected output.
 
-1. Select **Project > Run C Simulation** or click on the button from the tools bar buttons, and click **OK** in the C Simulation Dialog window.
+1. Select **FLOW > C SIMULATION > Run**.
    The testbench will be compiled using apcc compiler and csim.exe file will be generated. The csim.exe will then be executed and the output will be displayed in the console view.
    <p align="center">
-    <img src ="./images/lab4/Figure3.png">
+    <img src ="./images/lab4/Figure3.jpg">
     </p>
     <p align = "center">
     <i>Initial part of the generated output in the Console view</i>
@@ -93,13 +96,13 @@ Download the audio ctrl IP from https://github.com/Xilinx/PYNQ/tree/master/board
 
 #### Synthesize the design with the defaults. View the synthesis results and answer the question listed in the detailed section of this step.
 
-1. Select **Solution > Run C Synthesis > Active Solution** to start the synthesis process.
-2. When synthesis is completed, several report files will become accessible and the Synthesis. Results will be displayed in the information pane.
+1. Select **FLOW > C SYNTHESIS > Run** to start the synthesis process.
+2. When synthesis is completed, several report files will become accessible, you can open it on the **FLOW > C SYNTHESIS > Report > Synthesis**.
 3. The *Synthesis Report* shows the performance and resource estimates as well as estimated latency in the design.
 4. Using scroll bar on the right, scroll down into the report and answer the following question.**Question 1**Estimated clock period:Worst case latency:Number of DSP48E used:Number of BRAMs used:Number of FFs used:Number of LUTs used:
 5. The report also shows the top-level interface signals generated by the tools.
    <p align="center">
-    <img src ="./images/lab4/Figure4.png">
+    <img src ="./images/lab4/Figure4.jpg">
     </p>
     <p align = "center">
     <i>Generated interface signals</i>
@@ -110,24 +113,24 @@ Download the audio ctrl IP from https://github.com/Xilinx/PYNQ/tree/master/board
 
 #### Run the RTL/C Co-simulation, selecting Verilog. Verify that the simulation passes.
 
-1. Select **Solution > Run C/RTL Co-simulation** to open the dialog box so the desired simulations can be run.
-2. Select the *Verilog* option and click **OK**.
+1. Select **FLOW > C/RTL COSIMULATION > Run**.
+2. Select the **FLOW > C/RTL COSIMULATION > REPORTS > Cosimulation** to view the report.
 
-   The Co-simulation will run, generating and compiling several files, and then simulating the design. In the console window you can see the progress. When done the RTL Simulation Report shows that it was successful and the latency reported was 68.
+   The Co-simulation will run, generating and compiling several files, and then simulating the design. In the console window you can see the progress. When done the RTL Simulation Report shows that it was successful and the latency reported was 66.
 
 ### Setting Up the AXI Lite Adapters and Re-synthesizing the Design
 
 #### Add INTERFACE directive to create AXI4LiteS adapters so IP-XACdT adapter can be generated during the RTL Export step.
 
 1. Make sure that **fir.c** file is open and in focus in the information view.
-2. Select the **Directive** tab.
-3. Right-click *x*, and click on **Insert Directive…**.
+2. Open the **HLS Directive** pane.
+3. Click the **Add Directive** of *x*.
 4. In the Vitis HLS Directive Editor dialog box, select **INTERFACE** using the drop-down button.
 5. Click on the button beside *mode (optional)*. Select **s_axilite**.
 6. In the *bundle (optional)* field, enter **fir_io** and click **OK**.
 
    <p align="center">
-    <img src ="./images/lab4/Figure5.png" width="40%" height="80%">
+    <img src ="./images/lab4/Figure5.jpg" width="40%" height="80%">
     </p>
     <p align = "center">
     <i>Selecting the AXI4LiteS adapter and naming bundle</i>
@@ -135,76 +138,70 @@ Download the audio ctrl IP from https://github.com/Xilinx/PYNQ/tree/master/board
 7. Similarly, apply the **INTERFACE** directive (including bundle) to the *y* output.
 
    <p align="center">
-    <img src ="./images/lab4/Figure6.png" width="40%" height="80%"/>
+    <img src ="./images/lab4/Figure6.jpg" width="40%" height="80%"/>
     </p>
     <p align = "center">
     <i>Applying bundle to assign y output to AXI4Lite adapter</i>
     </p>
-8. Apply the **INTERFACE** directive to the *top-level module fir* to include ap_start, ap_done, and ap_idle signals as part of bus adapter (the variable name shown will be return). Include the bundle information too. **There is a bug in the tool, as it does not update the directives.tcl file with this directive.**
+8. Apply the **INTERFACE** directive to the *top-level module fir* to include ap_start, ap_done, and ap_idle signals as part of bus adapter (the variable name shown will be return). Include the bundle information too.
 
    <p align="center">
-    <img src ="./images/lab4/Figure7.png" width="40%" height="80%">
+    <img src ="./images/lab4/Figure7.jpg" width="40%" height="80%">
     </p>
     <p align = "center">
     <i>Applying bundle to assign function control signals to AXI4Lite adapter</i>
     </p>
     Note that the above steps will create address maps for x, y, ap_start ap_valid, ap_done, and ap_idle, which can be accessed via software. Alternately, ap_start, ap_valid, ap_done, ap_idle signals can be generated as separate ports on the core. These ports will then have to be connected in a processor system using available GPIO IP.
-9. Worksaround for this bug is to modify the source code and apply using **pragma**. Enter the following line on line number 11.
-
-   #pragma HLS INTERFACE s_axilite port=return bundle=fir_io
-
-   Save the file.
 
 ### Re-synthesize the design
 
 #### Re-synthesize the design as directives have been added. Run the RTL Export to export the design as an IP.
 
-1. Since the directives have been added, it is necessary to re-synthesize the design. Select **Solution > Run C Synthesis > Active Solution**.
+1. Since the directives have been added, it is necessary to re-synthesize the design. Select **FLOW > C SYNTHESIS > Run**.
 
-   Check the Interface summary at the bottom of the Synthesis report to see the interface that has been created.
-2. Once the design is synthesized, select **Solution > Export RTL** to open the dialog box so the desired IP can be generated.
-   An **Export RTL Dialog** box will open.
-
+   Check the *REPORTS > Synthesis* to see the interface that has been created.
+2. Once the design is synthesized, select **FLOW > C/RTL COSIMULATION > Run** to verify that the design functions correctly.
    <p align="center">
-    <img src ="./images/lab4/Figure8.png" width="60%" height="80%">
+    <img src ="./images/lab4/Figure8.jpg" width="60%" height="80%">
     </p>
     <p align = "center">
-    <i>Export RTL Dialog</i>
+    <i>Success run C/RTL COSIMULATION</i>
     </p>
-3. Click **OK** to export the design as an IP.
+
+3. Then we select **FLOW > PACKAGE > Run** to package the IP.
 4. When the run is completed, expand the **impl** folder in the Explorer view and observe various generated directories, such as ip, misc, verilog and vhdl.
 
    <p align="center">
-    <img src ="./images/lab4/Figure9.png">
+    <img src ="./images/lab4/Figure9.jpg">
     </p>
     <p align = "center">
     <i>IP-XACT adapter generated</i>
     </p>
     Expand the *ip* directory and observe several files and sub-directories. One of the sub-directory of interest is the drivers directory which consists of header, c, tcl, mdd, and makefile files. Another file of interest is the zip file, which is the ip repository file that can be imported in an IP Integrator design
     <p align="center">
-    <img src ="./images/lab4/Figure10.png">
+    <img src ="./images/lab4/Figure10.jpg">
     </p>
     <p align = "center">
     <i>Adapter’s drivers directory</i>
     </p>
-5. Close Vitis HLS by selecting **File > Exit**.
+5. Close Vitis HLS by selecting **File > Close Window**.
 
 ### Create a Vivado Project
 
 #### Open a terminal and run the provided tcl script to create an initial system targeting the PYNQ-ZU board.
 
-1. Download the board files of PYNQ-ZU from [/board_files](https://github.com/Xilinx/XilinxBoardStore/tree/master/boards/TUL/pynqzu/1.1), and put it in the folder **<Vivado_2021_2_install>/data/xhub/boards/XilinxBoardStore/boards/Xilinx/** on Linux, while **<Vivado_2021_2_install>\\data\\xhub\\boards\\XilinxBoardStore\\boards\\Xilinx\\** on Windows, where **<Vivado_2021_2_install>** should be replaced by the install_path on your computer.
+1. Download the board files of PYNQ-Z2 from [/board_files](https://github.com/Xilinx/XilinxBoardStore/tree/master/boards/TUL/pynq-z2), and put it in the folder **<Vivado_2024_2_install>/data/xhub/boards/XilinxBoardStore/boards/Xilinx/** on Linux, while **<Vivado_2024_2_install>\\data\\xhub\\boards\\XilinxBoardStore\\boards\\Xilinx\\** on Windows, where **<Vivado_2024_2_install>** should be replaced by the install_path on your computer.
 2. On Linux machine, open a terminal directly. While on Windows machine, open a **Command Prompt** window.
-3. Execute **source <Vivado_2021_2_install>/settings64.sh** on Linux, while **<Vivado_2021_2_install>\\settings64-Vivado.bat** on Windows, where **<Vivado_2021_2_install>** should be replaced by the install_path on your computer.
+3. Execute **source <Vivado_2024_2_install>/settings64.sh** on Linux, while **<Vivado_2024_2_install>\\settings64-Vivado.bat** on Windows, where **<Vivado_2024_2_install>** should be replaced by the install_path on your computer.
 4. Change the directory to **{labs}/lab4** using the *cd* command.
-5. Run the provided script file to create an initial system having zed_audio_ctrl and GPIO peripherals by typing the following command:
+5. Run the provided script file to create an initial system having zed_audio_ctrl and GPIO peripherals by typing the following command (in win maybe you should use the Vivado Tcl Shell):
 
-   **vivado -source pynq_zu_audio_project_create.tcl**
+   **vivado -source pynq_z2_audio_project_create.tcl**
 
    The script will be run and the initial system, shown below, will be created.
 
    <p align="center">
-    <img src ="./images/lab4/Figure11.png">
+    <img src ="./images/lab4/Figure11.jpg">
     </p>
     <p align = "center">
     <i>Block design made for Pynq</i>
@@ -212,15 +209,15 @@ Download the audio ctrl IP from https://github.com/Xilinx/PYNQ/tree/master/board
 
 #### Add the HLS IP to the IP Catalog
 
-1. Select **Flow Navigator > Project Manager > Settings**
+1. Select **Flow Navigator > Project Manager > Settings > Edit**
 2. Expand **IP > Repository** in the left pane.
-3. Click the **+** button (The lab4/ip_repo directory has already been added). Browse to **{labs}/lab4/fir/solution1/impl/ip** and click **Select**.
+3. Click the **+** button (The lab4/ip_repo directory has already been added). Browse to **{labs}/lab4/fir/fir/hls/impl/ip** and click **Select**.
 
    The directory will be scanned and added in the IP Repositories window, and one IP entry will be detected.
 4. Click **OK**.
 
    <p align="center">
-    <img src ="./images/lab4/Figure12.png">
+    <img src ="./images/lab4/Figure12.jpg">
     </p>
     <p align = "center">
     <i>Setting path to IP Repositories</i>
@@ -248,7 +245,7 @@ Download the audio ctrl IP from https://github.com/Xilinx/PYNQ/tree/master/board
    At this stage the design should look like shown below (you may have to click the regenerate button).
 
    <p align="center">
-    <img src ="./images/lab4/Figure13.png">
+    <img src ="./images/lab4/Figure13.jpg">
     </p>
     <p align = "center">
     </p>
@@ -257,7 +254,7 @@ Download the audio ctrl IP from https://github.com/Xilinx/PYNQ/tree/master/board
 
 1. Click on the **Address Editor**, and expand the **processing_system7_0 > Data** if necessary. The generated address map should look like as shown below.
    <p align="center">
-    <img src ="./images/lab4/Figure14.png">
+    <img src ="./images/lab4/Figure14.jpg">
     </p>
     <p align = "center">
     <i>Generated address map</i>
@@ -265,7 +262,7 @@ Download the audio ctrl IP from https://github.com/Xilinx/PYNQ/tree/master/board
 2. Run *Design Validation* (**Tools > Validate Design**) and verify there are no errors
 3. In the *sources* view, right-click on the block diagram file, **system.bd**, and select **Create HDL Wrapper** to update the HDL wrapper file. When prompted, click **OK** with the *Let Vivado manage wrapper and auto-update* option.
 4. Click **Add Sources** in the Flow Navigator pane, select **Add or Create Constraints**, and click **Next**.
-5. Click the *Add Files* button, browse to the **{labs}/lab4** folder, select **pynq_zu_audio_constraints.xdc**.
+5. Click the *Add Files* button, browse to the **{labs}/lab4** folder, select **pynq_z2_audio_constraints.xdc**.
 6. Click *Copy constraints files into project* and then click **Finish** to add the file.
 7. Click on the **Generate Bitstream** in the Flow Navigator to run the synthesis, implementation, and bitstream generation processes.
 8. Click **Save, Yes**, and **OK** if prompted to start the process.
@@ -277,36 +274,36 @@ Download the audio ctrl IP from https://github.com/Xilinx/PYNQ/tree/master/board
 
 1. Select **File > Export > Export Hardware…**
 2. Click **Next**
-3. Make sure that *Include Bitstream* option is selected and click **OK**, leaving the target directory set to local project directory {labs}/lab4/audio.
-4. Open **Vitis 2021.2**
-5. Change the workspace to **{labs}/lab4/audio** and click **Launch**
-6. In Vitis, select **File > New > Platform Project**
-7. Enter **audio** as the *Platform project name* and click **Next**
-8. For *XSA File*, browse to **{labs}/lab4/audio** and select **system_wrapper.xsa**
+3. Make sure that *Include Bitstream* option is selected and click **Next**, leaving the target directory set to local project directory {labs}/lab4/audio.
+4. Open **Vitis 2024.2**
+5. Click the **Create Platform Component** ,set the path to **{labs}/lab4/platform** and change the name to **audio**. Click **Next**.
+6. Waiting for the xsa file parsing to complete, click **Next**.
+7. Click the **Build** button to build the platform.
    <p align="center">
-    <img src ="./images/lab4/Figure15.png">
+    <img src ="./images/lab4/Figure15.jpg">
     </p>
     <p align = "center">
-    <i>Hardware Specification</i>
+    <i>Platform after build</i>
     </p>
-9. Click **Finish** with the default settings (with **standalone operating system**).
-10. Select **File > New > Application Project**
-11. Click **Next**
-12. In **Select a platform from repository** tab, select **audio** as the platform.
-13. Click **Next**
-14. Enter **Test** as the *Project* Name and click **Next**
-15. Click **Next**, select **standalone_domain** for the domain.
+8.  Select **File > New Component > Application**
+9.  Let the path be **{labs}/lab4/app** and the name be **audio**. Click **Next**.
+10. Add the **audio** path if the path is not in the list (in the **{labs}/lab4/platform/audio/export/audio** folder). Select the audio platform and click **Next**.
     <p align="center">
-    <img src ="./images/lab4/Figure16.png">
+    <img src ="./images/lab4/Figure16.jpg">
+    </p>
+    <p align = "center">
+    <i>Select the audio platform</i>
+    </p>
+11. In the **Domain** section, select **standalone** and click **Next**.
+    <p align="center">
+    <img src ="./images/lab4/Figure17.jpg">
     </p>
     <p align = "center">
     <i>Select domain</i>
     </p>
-16. Click **Next**, select **Empty Application(C)** and click **Finish**
-17. Select *Test* in the project view, right-click the *src* folder, and select **Import Sources...**
-18. Browse to **{labs}/lab4** folder.
-19. Select both **pynq_zu_testapp.c** and **pynq_zu_audio.h** and click **Finish** to add the files to the project.
-20. Select **Test_system** inn the *Assistant* view, right-click and select **Build**. The program should compile successfully.
+12. In the **Source Files** page, browse to **{labs}/lab4** folder.
+13. Select both **pynq_z2_testapp.c** and **pynq_z2_audio.h** and click **Open** to add the files to the project.Click **Next**.
+14. In summary page, click **Finish**.
 
 ### Verify the Design in Hardware
 
@@ -315,17 +312,14 @@ Download the audio ctrl IP from https://github.com/Xilinx/PYNQ/tree/master/board
 1. Connect a micro-usb cable between a PC and the JTAG port of the board.
 2. Connect an audio patch cable between the **Line In** jack and the **speaker out** (headphone)  jack of a PC.
 3. Connect a headphone to the *HP+MIC* jack on board. Power **ON** the board.
-4. Select **Xilinx > Program Device**.
-5. Make sure that the **system_wrapper.bit** bitstream is selected.
-6. Click **Program**.
-   This will configure the FPGA.
-7. Double-click **corrupted_music_4KHz.wav** or some other wave file of interest to play it using the installed media player. Place it in the continuous play mode.
-8. Right-click on the *Test_system* in the **Assistant** view and select **Run > Run configuration**.
-9. Double-click on the *System Project Debug* to create the Run configuration, and then click on **Run**
-
+4. Click the **FLOW > Build** to build the application.
+5. Double-click **corrupted_music_4KHz.wav** or some other wave file of interest to play it using the installed media player. Place it in the continuous play mode.
+6.  Click **FLOW > Run** to run the application.
+   
    The program will be downloaded and run. If you want to listen to corrupted signal then set the **SW0 OFF**. To listened the filtered signal set the **SW0 ON**.
-10. When done, power OFF the board.
-11. Exit Vitis and Vivado using **File > Exit**.
+
+7.  When done, power OFF the board.
+8.  Exit Vivado using **File > Exit**, Vitis using **File > Close Window**.
 
 ## Conclusion
 
@@ -377,6 +371,7 @@ Number of LUTs used: **257**
 
 ### Creating the System Using the IP Integrator
 
+<!-- there are look like same in the vivado 24.2, i think it can not update -->
 #### Use the IP Integrator to create a new Block Design, and generate the ARM Cortex-A9 processor based hardware system.
 
 1. In the *Flow Navigator*, click **Create Block Design** under IP Integrator

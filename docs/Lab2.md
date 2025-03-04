@@ -17,13 +17,13 @@ After completing this lab, you will be able to:
 ### Create a Vitis HLS Project from Command Line
 
 #### Validate your design using terminal. Create a new Vitis HLS project from the terminal.
-1. Invoke Vitis HLS Command prompt by selecting **Start > Xilinx Design Tools > Vitis HLS 2022.2 Command Prompt** on Windows machine or open a new terminal window on Linux machine.
+1. Invoke Vitis HLS Command prompt by selecting **Start > Xilinx Design Tools > Vitis HLS 2024.2 Command Prompt** on Windows machine open the **Vivado 2024.2 Tcl Shell** (the version may vary).
 2. Change directory to **{labs}/lab2**.
 
    A self-checking program (yuv_filter_test.c) is provided. Using that we can validate the design. A Makefile is also provided. Using the Makefile, the necessary source files can be compiled and the compiled program can be executed. You can examine the contents of these files and the project directory.
-3. In the terminal, type **make** to compile and execute the program. (You might need to set up the system environment variable for make command)
+3. In the terminal, type **exec make** to compile and execute the program. (You might need to set up the system environment variable for make command)
     <p align="center">
-    <img src ="./images/lab2/Figure1.png">
+    <img src ="./images/lab2/Figure1.jpg">
     </p>
     <p align = "center">
     <i>Validating the design</i>
@@ -34,46 +34,43 @@ After completing this lab, you will be able to:
 
     A Vitis HLS tcl script file (pynq_yuv_filter.tcl) is provided and can be used to create a Vitis HLS project.
 4. Type **vitis_hls -f pynq_yuv_filter.tcl** in the terminal to create the project targeting xc7z020clg400-1 part.
-    The project will be created and the *vitis_hls.log* file will be generated.
-5. Open the **vitis_hls.log** file from *{labs}/lab2* using any text editor and observe the following sections:
-* Creating directory and project called yuv_filter.prj within it, adding design files to the project, setting solution name as solution1, setting target device, setting desired clock period, and importing the design and testbench files.
-* Synthesizing (Generating) the design which involves scheduling and binding of each functions and sub-function.
-* Generating RTL of each function and sub-function in Verilog and VHDL languages.
+5. First we should cd to the directory to **{labs}/lab2**. In win it should use the cmd, in Linux it should use the terminal.
+6. Here we have two choices to create the project:
+    * **vitis -s run.py** : This command will create the project using the python script run.py. And it's recommended to use this command.
+    * **vitis-run --mode hls --tcl run_hls.tcl** : This command will create the project using the tcl script run_hls.tcl.
+    The project will be created and the *log* file will be generated.
+
+<sub>**Note:** You should setup the environment variables for Vitis before running the command.</sub>
     <p align="center">
-    <img src ="./images/lab2/Figure2.png">
+    <img src ="./images/lab2/Figure2.jpg">
     </p>
     <p align = "center">
-    <i>Creating project and setting up parameters</i>
+    <i>Using the .py build the component</i>
     </p>
     <p align="center">
-    <img src ="./images/lab2/Figure3.png">
+    <img src ="./images/lab2/Figure3.jpg">
     </p>
     <p align = "center">
-    <i>Synthesizing (Generating) the design</i>
-    </p>
-    <p align="center">
-    <img src ="./images/lab2/Figure4.png">
-    </p>
-    <p align = "center">
-    <i>Generating RTL</i>
-    </p>
-6. Open the created project (in GUI mode) from the terminal, by typing **vitis_hls -p yuv_filter.prj**.
-    The Vitis HLS will open in GUI mode and the project will be opened.
+    <i>Using the .tcl build the component</i>
+
+7. Open the **vitis_hls.log** file from *{labs}/lab2* using any text editor and observe the following sections:
+8. You can view the log in **./w/yuv_filter/yuv_filter/logs** (use .py) or in the **./logs** (use .tcl)
+9. Type **vitis -w ./w** in the terminal to open the component in Vitis. (if use the tcl you might meet a pop-up windows to show version cannot recognize, click update)
 
 ### Analyze the Created Project and Results
 
-#### Open the source file and note that three functions are used. Look at the results and observe that the latencies are undefined (represented by ?).
-1. In Vitis HLS GUI, expand the source folder in the *Explorer* view and double click **yuv_filter.c** to view the content.
+#### Open the source file and note that three functions are used. Look at the results and observe that the latencies are exceptionally large.
+1. In Vitis, expand the source folder and  click **yuv_filter.c** to view the content.
 * The design is implemented in 3 functions: **rgb2yuv**, **yuv_scale** and **yuv2rgb**.
 * Each of these filter functions iterates over the entire source image (which has maximum dimensions specified in image_aux.h), requiring a single source pixel to produce a pixel in the result image.
 * The scale function simply applies individual scale factors, supplied as top-level arguments to the Y’UV components.
 * Notice that most of the variables are of user-defined (typedef) and aggregate (e.g. structure, array) types.
 * Also notice that the original source used malloc() to dynamically allocate storage for the internal image buffers. While appropriate for such large data structures in software, malloc() is not synthesizable and is not supported by Vitis HLS.
 * A viable workaround is conditionally compiled into the code, leveraging the __SYNTHESIS__ macro. Vitis HLS automatically defines the __SYNTHESIS__ macro when reading any code. This ensure the original malloc() code is used outside of synthesis but Vitis HLS will use the workaround when synthesizing.
-2. Expand the **syn > report** folder in the *Explorer* view and double-click **yuv_filter_csynh.rpt** entry to open the synthesis report.
-3. Each of the loops in this design has variable bounds – the width and height are defined by members of input type *image_t*. When variables bounds are present on loops the total latency of the loops cannot be determined: this impacts the ability to perform analysis using reports. Hence, **“?”** is reported for various latencies.
+2. Click the **FLOW > C SYNTHESIS > REPORTS > Synthesis** to open the synthesis report.
+3. Each of the loops in this design has variable bounds – the width and height are defined by members of input type image_t. When variable bounds are present, the tool cannot fully optimize loop execution, leading to excessively high latency values due to inefficient pipelining and large initiation intervals (II). This impacts performance and may cause violations in pipelining constraints.
     <p align="center">
-    <img src ="./images/lab2/Figure5.png">
+    <img src ="./images/lab2/Figure4.jpg">
     </p>
     <p align = "center">
     <i>Latency computation</i>
@@ -82,13 +79,13 @@ After completing this lab, you will be able to:
 ### Apply TRIPCOUNT Pragma
 
 #### Open the source file and uncomment pragma lines, re-synthesize, and observe the resources used as well as estimated latencies. Answer the questions listed in the detailed section of this step.
-1. To assist in providing loop-latency estimates, Vitis HLS provides a TRIPCOUNT directive which allows limits on the variables bounds to be specified by the user. In this design, such directives have been embedded in the source code, in the form of #pragma statements.
+1. To assist in providing loop-latency estimates, Vitis provides a TRIPCOUNT directive which allows limits on the variables bounds to be specified by the user. In this design, such directives have been embedded in the source code, in the form of #pragma statements.
 
 2. Uncomment the **#pragma** lines (76, 79, 116, 119, 156, 159) to define the loop bounds and save the file.
 
-3. Synthesize the design by selecting **Solution > Run C Synthesis > Active Solution**. View the synthesis report when the process is completed.
+3. Synthesize the design by selecting **FLOW > C SYNTHESIS > Run**. View the synthesis report when the process is completed.
     <p align="center">
-    <img src ="./images/lab2/Figure6.png">
+    <img src ="./images/lab2/Figure5.jpg">
     </p>
     <p align = "center">
     <i>Latency computation after applying TRIPCOUNT pragma</i>
@@ -105,7 +102,7 @@ After completing this lab, you will be able to:
 
 4. Expand the **Module & loop** and note the latency and trip count numbers for the yuv_scale function. Note that the iteration latency of *YUV_SCALE_LOOP_X_YUV_SCALE_LOOP_Y* is 6x the specified TRIPCOUNT, implying that 6 cycles are used for each of the iteration of the loop.
     <p align="center">
-    <img src ="./images/lab2/Figure8.png">
+    <img src ="./images/lab2/Figure6.jpg">
     </p>
     <p align = "center">
     <i>Loop latency</i>
@@ -114,7 +111,7 @@ After completing this lab, you will be able to:
 
 5. You can verify this by opening the **Schedule Viewer**, and expand the **YUV_SCALE_LOOP_X** entry.
     <p align="center">
-    <img src ="./images/lab2/Figure9.png">
+    <img src ="./images/lab2/Figure7.jpg">
     </p>
     <p align = "center">
     <i>Design analysis view of the YUV_SCALE_LOOP_Y loop</i>
@@ -140,36 +137,41 @@ After completing this lab, you will be able to:
     Number of FFs used:   
     Number of LUTs used:  
 
-### Remove the pipeline optimization done by Vitis HLS automatically by adding pipeline off pragma
+### Remove the pipeline optimization done by Vitis automatically by adding pipeline off pragma
 1. Select **Project > New Solution**.
-2. A *Solution Configuration* dialog box will appear. Note that the check boxes of *Copy directives and constraints from solution* are checked with *solution1* selected. Click the **Finish** button to create a new solution with the default settings.
+2. Right-click on the **yuv_filter** on the folder pane and select **Clone Component**.Type name **yuv_filter_solution2** and click **OK**.
+3. Make sure that the new **yuv_filter.c** source is opened and visible in the information pane, and click on the **HLS DIRECTIVES** (in the right side of the IDE) and click **OK**.
     <p align="center">
-    <img src ="./images/lab2/Figure10.png">
+    <img src ="./images/lab2/Figure8.jpg">
     </p>
     <p align = "center">
-    <i>Creating a new Solution after copying the existing solution</i>
+    <i>HLS DIRECTIVES Button</i>
     </p>
-3. Make sure that the **yuv_filter.c** source is opened and visible in the information pane, and click on the **Directive** tab.
-4. Select function **RGB2YUV_LOOP_X** in the directives pane, right-click on it, and select **Insert Directive...**
-5. Click on the drop-down button of the *Directive* field. A pop-up menu shows up listing various directives. Select **PIPELINE** directive.
-6. In the *Vitis HLS Directive Editor* dialog box, click on the **off** option to turn off the automatic pipelining. Make sure that the *Directive File* is selected as destination. Click **OK**.
+4. Select function **RGB2YUV_LOOP_X** in the directives pane, click the **+** button in the end of the line. A pop-up menu shows up listing various directives
+5. Select **PIPELINE** directive,  click on the **off** option to turn off the automatic pipelining.Make sure that the *Config File* is selected as destination. Click **OK**.
     <p align="center">
-    <img src ="./images/lab2/Figure11.png">
+    <img src ="./images/lab2/Figure9.jpg">
     </p>
     <p align = "center">
     <i>Add PIPELINE off directive</i>
     </p>
-7. Similarly, apply the **PIPELINE off** directive to **YUV2RGB_LOOP_X**, **YUV2RGB_LOOP_Y**, **YUV_SCALE_LOOP_X**, **YUV_SCALE_LOOP_Y** and **RGB2YUV_LOOP_Y** objects. At this point, the *Directive* tab should look like as follows.
+6. Similarly, apply the **PIPELINE off** directive to **YUV2RGB_LOOP_X**, **YUV2RGB_LOOP_Y**, **YUV_SCALE_LOOP_X**, **YUV_SCALE_LOOP_Y** and **RGB2YUV_LOOP_Y** objects. At this point, the *Directive* tab should look like as follows.
     <p align="center">
-    <img src ="./images/lab2/Figure12.png">
+    <img src ="./images/lab2/Figure10.jpg">
     </p>
     <p align = "center">
-    <i>PIPELINE off directive applied</i>
+    <i>PIPELINE off directive applied_0</i>
     </p>
-8. Click on the **Synthesis** button.
-9. When the synthesis is completed, report shows the performance and area without the automatic optimization of Vitis HLS.
     <p align="center">
-    <img src ="./images/lab2/Figure13.png">
+    <img src ="./images/lab2/Figure11.jpg">
+    </p>
+    <p align = "center">
+    <i>PIPELINE off directive applied_1</i>
+    </p>
+7. Click on the **FLOW > C SYNTHESIS > Run** button.
+8.  When the synthesis is completed, report shows the performance and area without the automatic optimization of Vitis HLS.
+    <p align="center">
+    <img src ="./images/lab2/Figure12.jpg">
     </p>
     <p align = "center">
     <i>Performance after applying PIPELINE off directive</i>
@@ -177,46 +179,50 @@ After completing this lab, you will be able to:
 
 ### Apply PIPELINE Directive
 
-#### Create a new solution by copying the previous solution settings. Apply the PIPELINE directive. Generate the solution and understand the output.
-1. Select **Project > New Solution**.
-2. A *Solution Configuration* dialog box will appear. Click the **Finish** button (with copy from Solution2 selected).
-3. Make sure that the **yuv_filter.c** source is opened and visible in the information pane, and click on the **Directive** tab.
-4. Select the pragma *HLS PIPELINE off* of **RGB2YUV_LOOP_Y** in the directives pane, right-click on it, and select **Modify Directive**
-5. In the *Vitis HLS Directive Editor* dialog box, click the **off** option to turn on the pipelining. Make sure that the *Directive File* is selected as destination. Click **OK**.
+#### Clone a new Component by copying the previous solution settings. Apply the PIPELINE directive. Generate the solution and understand the output.
+1. Right-click on the **yuv_filter_solution2** on the folder pane and select **Clone Component**.Type name **yuv_filter_solution3** and click **OK**.
+2. Make sure that the new **yuv_filter.c** source is opened and visible in the information pane, and click on the **HLS DIRECTIVES** 
+3. Select the pragma *HLS PIPELINE off* of **RGB2YUV_LOOP_Y**, click the **Edit Directive** button (in the end of the line look like a pencil).
+4. In the *Edit Directive* dialog box, click the **off** option to turn on the pipelining. Make sure that the *Directive File* is selected as destination.
     <p align="center">
-    <img src ="./images/lab2/Figure14.png">
+    <img src ="./images/lab2/Figure13.jpg">
     </p>
     <p align = "center">
-    <i>Add PIPELINE directive</i>
+    <i>Edit PIPELINE directive</i>
     </p>
 * When an object (function or loop) is pipelined, all the loops below it, down through the hierarchy, will be automatically unrolled.
 * In order for a loop to be unrolled it must have fixed bounds: all the loops in this design have variable bounds, defined by an input argument variable to the top-level function.
 * Note that the TRIPCOUNT directive on the loops only influences reporting, it does not set bounds for synthesis.
 * Neither the top-level function nor any of the sub-functions are pipelined in this example.
 * The pipeline directive must be applied to the inner-most loop in each function – the innermost loops have no variable-bounded loops inside which are required to be unrolled and the outer loop will simply keep the inner loop fed with data.
-6. Leave *II* (Initiation Interval) blank as Vitis HLS will try for an II=1, one new input every clock cycle.
-7. Click **OK**.
-8. Similarly, apply the **PIPELINE** directive to **YUV2RGB_LOOP_Y** and **YUV_SCALE_LOOP_Y** objects, but remove the **PIPELINE** directive of **YUV2RGB_LOOP_X**, **YUV_SCALE_LOOP_X** and **RGB2YUV_LOOP_X**. At this point, the *Directive* tab should look like as follows.
+5. Leave *II* (Initiation Interval) blank as Vitis HLS will try for an II=1, one new input every clock cycle. Click **OK**.
+6. Similarly, apply the **PIPELINE** directive to **YUV2RGB_LOOP_Y** and **YUV_SCALE_LOOP_Y** objects, but remove the **PIPELINE** directive of **YUV2RGB_LOOP_X**, **YUV_SCALE_LOOP_X** and **RGB2YUV_LOOP_X**. At this point, the *Directive* tab should look like as follows.
     <p align="center">
-    <img src ="./images/lab2/Figure15.png">
+    <img src ="./images/lab2/Figure14.jpg">
     </p>
     <p align = "center">
-    <i>PIPELINE directive applied</i>
+    <i>PIPELINE directive applied_0</i>
     </p>
-9. Click on the **Synthesis** button.
-10. When the synthesis is completed, select **Project > Compare Reports…** to compare the two solutions.
-11. Select *Solution2* and *Solution3* from the **Available Reports**, and click on the **Add>>** button.
-12. Observe that the latency reduced.
     <p align="center">
-    <img src ="./images/lab2/Figure16.png">
+    <img src ="./images/lab2/Figure15.jpg">
+    </p>
+    <p align = "center">
+    <i>PIPELINE directive applied_1</i>
+    </p>
+7. Click on the **FLOW > C SYNTHESIS > Run** button.
+8.  When the synthesis is completed, select **View > Compare HLS Compare reports** to compare the two solutions.
+9.  Select *yuv_filter_Solution2* and *yuv_filter_Solution3*, and click on the **Compare** button.
+10. Observe that the latency reduced.
+    <p align="center">
+    <img src ="./images/lab2/Figure16.jpg">
     </p>
     <p align = "center">
     <i>Performance comparison after pipelining</i>
     </p>
-    In Solution2, the total loop latency of the inner-most loop was loop_body_latency x loop iteration count, whereas in Solution3 the new total loop latency of the inner-most loop is loop_body_latency + loop iteration count.
-13. Scroll down in the comparison report to view the resources utilization. Observe that the FFs, LUTs, and DSP48E utilization increased whereas BRAM remained same.
+    In yuv_filter_Solution2, the total loop latency of the inner-most loop was loop_body_latency x loop iteration count, whereas in Solution3 the new total loop latency of the inner-most loop is loop_body_latency + loop iteration count.
+11. Scroll down in the comparison report to view the resources utilization. Observe that the FFs, LUTs, and DSP48E utilization increased whereas BRAM remained same.
     <p align="center">
-    <img src ="./images/lab2/Figure17.png">
+    <img src ="./images/lab2/Figure17.jpg">
     </p>
     <p align = "center">
     <i>Resources utilization after pipelining</i>
@@ -224,35 +230,27 @@ After completing this lab, you will be able to:
 
 ### Apply DATAFLOW Directive and Configuration Command
 
-#### Create a new solution by copying the previous solution (Solution3) settings. Apply DATAFLOW directive. Generate the solution and understand the output.
-1. Select **Project > New Solution**.
-2. A *Solution Configuration* dialog box will appear. Click the **Finish** button (with copy from Solution4 selected).
-3. Close all inactive solution windows by selecting **Project > Close Inactive Solution Tabs**.
-4. Make sure that the **yuv_filter.c** source is opened in the information pane and select the *Directive* tab.
-5. Select function yuv_filter in the *Directive* pane, right-click on it and select **Insert Directive...**
-6. A pop-up menu shows up listing various directives. Select **DATAFLOW** directive and click **OK**.
-7. Click on the **Synthesis** button.
-8. When the synthesis is completed, the synthesis report is automatically opened.
-9. Observe additional information, **Dataflow** Type, in the *Performance Estimates* section is mentioned.
+#### Create a new solution by copying the previous Component (yuv_filter_Solution3). Apply DATAFLOW directive. Generate the Component and understand the output.
+1. Right-click on the **yuv_filter_solution3** on the folder pane and select **Clone Component**.Type name **yuv_filter_solution4** and click **OK**.
+2. Make sure that the new **yuv_filter.c** source is opened in the information pane and select the *HLS Directive* tab.
+3. Select function **yuv_filter** in the *HLS Directive* pane, click the **+** icon in the end of the line.
+4. A pop-up menu shows up listing various directives. Select **DATAFLOW** directive and click **OK**.
+5. Click on the **FLOW > C SYNTHESIS > Run** button.
+6. When the synthesis is completed, open the reports.
+7. Observe additional information, **Dataflow** Type, in the *Performance Estimates* section is mentioned.
     <p align="center">
-    <img src ="./images/lab2/Figure18.png">
+    <img src ="./images/lab2/Figure18.jpg">
     </p>
     <p align = "center">
-    <i>Performance estimate after DATAFLOW directive applied</i>
+    <i>Performance & Resource Estimate after DATAFLOW directive applied</i>
     </p>
 * The Dataflow pipeline throughput indicates the number of clocks cycles between each set of
 inputs reads. If this throughput value is less than the design latency it indicates the design
 can start processing new inputs before the currents input data are output.
 * While the overall latencies haven’t changed significantly, the dataflow throughput is showing
-that the design can achieve close to the theoretical limit (1920x1280 = 2457600) of
+that the design can achieve the theoretical limit (1920x1280 = 2457600) of
 processing one pixel every clock cycle.    
-10. Scrolling down into the *Utilization Estimates* section, observe that the number of BRAMs required has doubled. This is due to the default ping-pong buffering in dataflow.
-    <p align="center">
-    <img src ="./images/lab2/Figure19.png">
-    </p>
-    <p align = "center">
-    <i>Resource estimate with DATAFLOW directive applied</i>
-    </p>
+8.  You can also observe the number of BRAMs required has doubled. This is due to the default ping-pong buffering in dataflow.
 * When **DATAFLOW** optimization is performed, memory buffers are automatically inserted
 between the functions to ensure the next function can begin operation before the previous
 function has finished. The default memory buffers are ping-pong buffers sized to fully
@@ -261,24 +259,24 @@ accommodate the largest producer or consumer array.
 this design has data accesses which are fully sequential, FIFOs can be used. Another
 advantage to using FIFOs is that the size of the FIFOs can be directly controlled (not possible
 in ping-pong buffers where random accesses are allowed).
-11. The memory buffers type can be selected using Vitis HLS Configuration command.
+9. The memory buffers type can be selected using Vitis HLS Configuration command.
 
 #### Apply Dataflow configuration command, generate the solution, and observe the improved resources utilization.
-1. Select **Solution > Solution Settings…** to access the configuration command settings.
+1. Select **yuv_filter_solution4 > Settings** to access the configuration command settings.
 2. In the *Configuration Settings* dialog box, expand **config_dataflow** folder.
-3. Set **fifo** as the default_channel. Enter **2** as the fifo_depth. Click OK.
+3. View the Dataflow below C Synthesis, 
+4. Set **fifo** as the default_channel. Enter **2** as the fifo_depth.
     <p align="center">
-    <img src ="./images/lab2/Figure20.png">
+    <img src ="./images/lab2/Figure20.jpg">
     </p>
     <p align = "center">
     <i>Selecting Dataflow configuration command and FIFO as buffer</i>
     </p>
-4. Click **OK** again.
-5. Click on the **Synthesis** button.
-6. When the synthesis is completed, the synthesis report is automatically opened.
+5. Click on the **FLOW > C SYNTHESIS > Run** button.
+6. When the synthesis is completed, open the reports.
 7. Note that the latency has reduced. Since this design has data accesses which are fully sequential, the data can flow to next function without waiting all pixels to be processed.
     <p align="center">
-    <img src ="./images/lab2/Figure21.png ">
+    <img src ="./images/lab2/Figure21.jpg ">
     </p>
     <p align = "center">
     <i>Latency estimation after Dataflow configuration command</i>
@@ -288,6 +286,9 @@ in ping-pong buffers where random accesses are allowed).
 In this lab, you learned that even though this design could not be pipelined at the top-level, a strategy of pipelining the individual loops and then using dataflow optimization to make the functions operate in parallel was able to achieve the same high throughput, processing one pixel per clock. When DATAFLOW directive is applied, the default memory buffers (of ping-pong type) are automatically inserted between the functions. Using the fact that the design used only sequential (streaming) data accesses allowed the costly memory buffers associated with dataflow optimization to be replaced with simple 2 element FIFOs using the Dataflow command configuration.
 
 ## Answers
+
+<sub>"Note: These answers are based on the settings from the previous version and may not be accurate for the current version. Please verify with the latest synthesis report."</sub>
+
 1. **Answers for question 1:**  
     Estimated clock period: **6.960 ns**   
     Worst case latency: **7372833**   
